@@ -1,0 +1,41 @@
+# Don't change the appId! See <https://www.electron.build/configuration/nsis#guid-vs-application-name>
+appId: io.solarwallet.app
+productName: solar Wallet
+copyright: Copyright © 2021 SatoshiPay Ltd
+
+protocols:
+  name: Stellar transaction / payment requests URL,
+  schemes: [web+stellar]
+
+directories:
+  buildResources: ./electron/build
+  output: ./electron/dist
+
+files:
+  - "./dist/*"
+  - "./electron/lib/**"
+
+publish:
+  - provider: github
+    owner: satoshipay
+    repo: solar
+
+win:
+  # Electron builder bug: Without this line the icon gets corrupted on Windows
+  icon: ./electron/build/icon.png
+  target: squirrel
+
+squirrelWindows:
+  iconUrl: https://github.com/satoshipay/solar/blob/master/electron/build/icon.ico?raw=true
+
+mac:
+  hardenedRuntime: true
+  entitlements: ./electron/build/entitlements.mac.inherit.plist
+
+linux:
+  #  must not contain a whitespace for the .desktop file
+  artifactName: solar-Wallet-${version}.${ext}
+  category: Utility
+
+afterPack: ./scripts/electron-builder-afterpack.js
+afterSign: ./scripts/electron-builder-aftersign.js
